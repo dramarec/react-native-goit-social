@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     StyleSheet,
     Text,
@@ -9,8 +9,12 @@ import {
     Platform,
     Keyboard,
     KeyboardAvoidingView,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    Dimensions,
 } from "react-native";
+const { width, height } = Dimensions.get('window');
+
+import { useFonts } from 'expo-font';
 
 const initialState = {
     email: "",
@@ -19,11 +23,39 @@ const initialState = {
 
 export default function App() {
     // console.log("{*} ===> App ===> Platform.OS", Platform.OS);
+
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+    const [state, setState] = useState(initialState);
+    const [dimensions, setDimensions] = useState(
+        Dimensions.get("window").width - 20 * 2
+    );
+
+    useEffect(() => {
+        const onChange = () => {
+            const width = Dimensions.get("window").width - 20 * 2;
+            console.log("{*} ===> onChange ===> width", width);
+
+            setdimensions(width);
+        };
+        Dimensions.addEventListener("change", onChange);
+        return () => {
+            Dimensions.removeEventListener("change", onChange);
+        };
+    }, []);
+
+    const [loaded] = useFonts({
+        "DMMono-Regular": require("./assets/fonts/DMMono-Regular.ttf"),
+    });
+
+    if (!loaded) {
+        return null;
+    }
 
     const keyboardHide = () => {
         setIsShowKeyboard(false);
         Keyboard.dismiss();
+        console.log('state :', state);
+        setState(initialState);
     };
 
     return (
@@ -40,7 +72,10 @@ export default function App() {
                     >
 
                         <View /* style={styles.form} */
-                            style={{ ...styles.form, marginBottom: isShowKeyboard ? 20 : 150 }}
+                            style={{
+                                ...styles.form, marginBottom: isShowKeyboard ? 20 : 150,
+                                width: dimensions,
+                            }}
                         >
                             <View style={styles.header}>
                                 <Text style={styles.headerTitle}>Hello again</Text>
@@ -52,6 +87,13 @@ export default function App() {
                                     style={styles.input}
                                     textAlign={"center"}
                                     onFocus={() => setIsShowKeyboard(true)}
+                                    value={state.email}
+                                    onChangeText={(value) =>
+                                        setState((prevState) => ({
+                                            ...prevState,
+                                            email: value,
+                                        }))
+                                    }
                                 />
                             </View>
 
@@ -62,6 +104,13 @@ export default function App() {
                                     textAlign={"center"}
                                     secureTextEntry={true}
                                     onFocus={() => setIsShowKeyboard(true)}
+                                    value={state.password}
+                                    onChangeText={(value) =>
+                                        setState((prevState) => ({
+                                            ...prevState,
+                                            password: value,
+                                        }))
+                                    }
                                 />
                             </View>
 
@@ -94,7 +143,7 @@ const styles = StyleSheet.create({
         resizeMode: "cover",
         // justifyContent: "center",
         justifyContent: "flex-end",
-        // alignItems: "center",
+        alignItems: "center",
     },
     input: {
         borderWidth: 1,
@@ -104,12 +153,13 @@ const styles = StyleSheet.create({
         color: "#f0f8ff",
     },
     form: {
-        marginHorizontal: 40,
+        // marginHorizontal: 40,
     },
     inputTitle: {
         color: "#f0f8ff",
         marginBottom: 10,
         fontSize: 18,
+        fontFamily: "DMMono-Regular",
     },
     btn: {
         height: 40,
@@ -119,7 +169,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginHorizontal: 20,
-        //? border: Platform.OS === 'ios' ? 1 : 6,
         ...Platform.select({
             ios: {
                 backgroundColor: "transparent",
@@ -132,17 +181,18 @@ const styles = StyleSheet.create({
         }),
     },
     btnTitle: {
-        // color: "#f0f8ff",
         color: Platform.OS === "ios" ? "#4169e1" : "#f0f8ff",
-
         fontSize: 18,
+        fontFamily: "DMMono-Regular",
     },
     header: {
         alignItems: "center",
         marginBottom: 150,
     },
     headerTitle: {
-        fontSize: 30,
+        fontSize: 40,
         color: "#f0f8ff",
+        fontFamily: "DMMono-Regular",
+
     },
 });
