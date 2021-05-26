@@ -1,51 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList, Image } from "react-native";
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
 
-const PostsScreen = ({ route }) => {
-    console.log("{*} ===> PostsScreen ===> route", route.params);
+import DefaultScreenPosts from "../nestedScreens/DefaultScreenPosts";
+import CommentsScreen from "../nestedScreens/CommentsScreen";
+import MapScreen from "../nestedScreens/MapScreen";
 
-    const [posts, setPosts] = useState([]);
+const NestedScreen = createStackNavigator();
 
-    useEffect(() => {
-        if (route.params) {
-            setPosts((prevState) => [...prevState, route.params]);
-        }
-    }, [route.params]);
-
-    console.log("{*} ===> PostsScreen ===> posts", posts);
-
+const PostsScreen = () => {
     return (
-        <View style={styles.container}>
-            <FlatList
-                data={posts}
-                keyExtractor={(item, indx) => indx.toString()}
-                renderItem={({ item }) => (
-                    <View
-                        style={{
-                            marginBottom: 10,
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}
-                    >
-                        <Image
-                            source={{ uri: item.photo }}
-                            style={{ width: 350, height: 200 }}
-                        />
-                    </View>
-                )}
-            />
-
-
-        </View>
+        <NestedScreen.Navigator>
+            <NestedScreen.Screen component={DefaultScreenPosts} name="DefaultScreen" />
+            <NestedScreen.Screen component={CommentsScreen} name="Comments" />
+            <NestedScreen.Screen component={MapScreen} name="Map" />
+        </NestedScreen.Navigator>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-});
 
 export default PostsScreen;

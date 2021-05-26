@@ -1,24 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { Camera } from "expo-camera";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import * as Location from "expo-location";
 
 const CreateScreen = ({ navigation }) => {
     const [camera, setCamera] = useState(null);
     const [photo, setPhoto] = useState(null);
 
+    // useEffect(() => {
+    //     (async () => {
+    //         let { status } = await Location.requestForegroundPermissionsAsync();
+    //         if (status !== 'granted') {
+    //             setErrorMsg('Permission to access location was denied');
+    //             return;
+    //         }
+
+    //         let location = await Location.getCurrentPositionAsync({});
+    //         setLocation(location);
+    //     })();
+    // }, []);
+
     const takePhoto = async () => {
         // console.log("{*} ===> CreateScreen ===> camera", camera.takePictureAsync());
         const photo = await camera.takePictureAsync();
         setPhoto(photo.uri);
-        console.log("photo", photo);
+
+        const location = await Location.getCurrentPositionAsync({});
+        console.log("latitude", location.coords.latitude);
+        console.log("longitude", location.coords.longitude);
+        // console.log("{*} ===> takePhoto ===> location", location);
+        // console.log("photo", photo);
     };
 
     const sendPhoto = () => {
         console.log("navigation", navigation);
-        navigation.navigate("Posts", { photo });
+        navigation.navigate("DefaultScreen", { photo });
     };
-
 
     return (
         <View style={styles.container}>

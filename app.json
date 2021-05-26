@@ -16,7 +16,15 @@
         },
         "assetBundlePatterns": ["**/*"],
         "ios": {
-            "supportsTablet": true
+            "supportsTablet": true,
+            "infoPlist": {
+                "CFBundleAllowMixedLocalizations": true,
+                "UIBackgroundModes": ["location", "fetch"],
+                "NSCameraUsageDescription": "This app uses the camera to scan barcodes on event tickets."
+            }
+        },
+        "locales": {
+            "ru": "./languages/russian.json"
         }
     }
 }
