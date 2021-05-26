@@ -18,7 +18,7 @@ const initialState = {
     password: "",
 };
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [state, setState] = useState(initialState);
     const [dimensions, setDimensions] = useState(
@@ -112,6 +112,22 @@ const LoginScreen = () => {
                             >
                                 <Text style={styles.btnTitle}>SIGN IN</Text>
                             </TouchableOpacity>
+
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate("Register")}
+                                style={{
+                                    marginTop: 20,
+                                    alignSelf: "center",
+                                }}
+                            >
+                                <Text style={{ color: "#fff" }}>
+                                    New to applicatio?{"  "}
+                                    <Text style={{ fontSize: 20, color: "#ff6347" }}>
+                                        Sign Up
+                                    </Text>
+                                </Text>
+                            </TouchableOpacity>
+
                         </View>
                     </KeyboardAvoidingView>
 
