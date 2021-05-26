@@ -30,15 +30,13 @@ const CreateScreen = ({ navigation }) => {
         console.log("latitude", location.coords.latitude);
         console.log("longitude", location.coords.longitude);
         // console.log("{*} ===> takePhoto ===> location", location);
-
         // console.log("photo", photo);
     };
 
     const sendPhoto = () => {
         console.log("navigation", navigation);
-        navigation.navigate("Posts", { photo });
+        navigation.navigate("DefaultScreen", { photo });
     };
-
 
     return (
         <View style={styles.container}>

@@ -9,4 +9,5 @@
 -   yarn add @expo/vector-icons
 -   expo install expo-camera
 -   expo install expo-location
+-   expo install react-native-maps
 ```
