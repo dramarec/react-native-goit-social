@@ -1,20 +1,71 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Image } from "react-native";
+import { Camera } from "expo-camera";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const CreateScreen = () => {
-  return (
-    <View style={styles.container}>
-      <Text>CreateScreen</Text>
-    </View>
-  );
+    const [camera, setCamera] = useState(null);
+    const [photo, setPhoto] = useState(null);
+
+    const takePhoto = async () => {
+        console.log("{*} ===> CreateScreen ===> camera", camera.takePictureAsync());
+        const photo = await camera.takePictureAsync();
+        setPhoto(photo.uri);
+        // console.log("photo", photo);
+    };
+
+
+    return (
+        <View style={styles.container}>
+            <Camera style={styles.camera} ref={setCamera}>
+                {photo && (
+                    <View style={styles.takePhotoContainer}>
+                        <Image
+                            source={{ uri: photo }}
+                            style={{ height: 200, width: 200 }}
+                        />
+                    </View>
+                )}
+                <TouchableOpacity onPress={takePhoto} style={styles.snapContainer}>
+                    <Text style={styles.snap}>SNAP</Text>
+                </TouchableOpacity>
+            </Camera>
+        </View>
+    );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+    container: {
+        flex: 1,
+    },
+    camera: {
+        // height: 300,
+        // marginTop: 50,
+        flex: 1,
+        alignItems: "center",
+        justifyContent: 'flex-end'
+    },
+    snap: {
+        color: "#fff",
+    },
+    snapContainer: {
+        // marginTop: 200,
+        borderWidth: 1,
+        borderColor: "#ff0000",
+        width: 70,
+        height: 70,
+        borderRadius: 50,
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: 20,
+    },
+    takePhotoContainer: {
+        position: "absolute",
+        top: 50,
+        left: 10,
+        borderColor: "#fff",
+        borderWidth: 1,
+    },
 });
 
 export default CreateScreen;
