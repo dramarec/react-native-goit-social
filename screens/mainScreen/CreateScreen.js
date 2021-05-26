@@ -3,15 +3,20 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import { Camera } from "expo-camera";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-const CreateScreen = () => {
+const CreateScreen = ({ navigation }) => {
     const [camera, setCamera] = useState(null);
     const [photo, setPhoto] = useState(null);
 
     const takePhoto = async () => {
-        console.log("{*} ===> CreateScreen ===> camera", camera.takePictureAsync());
+        // console.log("{*} ===> CreateScreen ===> camera", camera.takePictureAsync());
         const photo = await camera.takePictureAsync();
         setPhoto(photo.uri);
-        // console.log("photo", photo);
+        console.log("photo", photo);
+    };
+
+    const sendPhoto = () => {
+        console.log("navigation", navigation);
+        navigation.navigate("Posts", { photo });
     };
 
 
@@ -20,16 +25,18 @@ const CreateScreen = () => {
             <Camera style={styles.camera} ref={setCamera}>
                 {photo && (
                     <View style={styles.takePhotoContainer}>
-                        <Image
-                            source={{ uri: photo }}
-                            style={{ height: 200, width: 200 }}
-                        />
+                        <Image style={styles.picture} source={{ uri: photo }} />
                     </View>
                 )}
-                <TouchableOpacity onPress={takePhoto} style={styles.snapContainer}>
+                <TouchableOpacity style={styles.snapContainer} onPress={takePhoto} >
                     <Text style={styles.snap}>SNAP</Text>
                 </TouchableOpacity>
             </Camera>
+            <View>
+                <TouchableOpacity style={styles.sendBtn} onPress={sendPhoto} >
+                    <Text style={styles.sendLabel}>SEND</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
@@ -39,17 +46,27 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     camera: {
-        // height: 300,
-        // marginTop: 50,
-        flex: 1,
+        height: "70%",
+        marginHorizontal: 2,
+        marginTop: 40,
+        borderRadius: 10,
         alignItems: "center",
-        justifyContent: 'flex-end'
+        justifyContent: "flex-end",
     },
-    snap: {
-        color: "#fff",
+    takePhotoContainer: {
+        position: "absolute",
+        top: 50,
+        left: 10,
+        borderColor: "#fff",
+        borderWidth: 1,
+        borderRadius: 10,
+    },
+    picture: {
+        height: 200,
+        width: 200,
+        borderRadius: 20,
     },
     snapContainer: {
-        // marginTop: 200,
         borderWidth: 1,
         borderColor: "#ff0000",
         width: 70,
@@ -59,12 +76,22 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginBottom: 20,
     },
-    takePhotoContainer: {
-        position: "absolute",
-        top: 50,
-        left: 10,
-        borderColor: "#fff",
-        borderWidth: 1,
+    snap: {
+        color: "#fff",
+    },
+    sendBtn: {
+        marginHorizontal: 30,
+        height: 40,
+        borderWidth: 2,
+        borderColor: "#20b2aa",
+        borderRadius: 10,
+        marginTop: 20,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    sendLabel: {
+        color: "#20b2aa",
+        fontSize: 20,
     },
 });
 
