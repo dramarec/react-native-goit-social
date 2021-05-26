@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList, Image } from "react-native";
+import { View, StyleSheet, FlatList, Image } from "react-native";
 
 const PostsScreen = ({ route }) => {
     console.log("{*} ===> PostsScreen ===> route", route.params);
@@ -34,8 +34,6 @@ const PostsScreen = ({ route }) => {
                     </View>
                 )}
             />
-
-
         </View>
     );
 };
