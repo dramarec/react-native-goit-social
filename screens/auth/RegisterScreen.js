@@ -75,7 +75,7 @@ const RegisterScreen = ({ navigation }) => {
                                     style={styles.input}
                                     textAlign={"center"}
                                     onFocus={() => setIsShowKeyboard(true)}
-                                    value={state.email}
+                                    value={state.nickname}
                                     onChangeText={(value) =>
                                         setstate((prevState) => ({
                                             ...prevState,
@@ -92,7 +92,7 @@ const RegisterScreen = ({ navigation }) => {
                                     style={styles.input}
                                     textAlign={"center"}
                                     onFocus={() => setIsShowKeyboard(true)}
-                                    value={state.email}
+                                    value={state.email.toLowerCase()}
                                     onChangeText={(value) =>
                                         setstate((prevState) => ({
                                             ...prevState,
