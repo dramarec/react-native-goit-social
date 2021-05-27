@@ -7,6 +7,14 @@ export const authSlice = createSlice({
         nickName: null
     },
     reducers: {
-
+        updateUserProfile: (state, { payload }) => ({
+            ...state,
+            userId: payload.userId,
+        }),
+        authStateChange: (state, { payload }) => ({
+            ...state,
+            stateChange: payload.stateChange,
+        }),
     },
 });
+console.log("{*} ===> authSlice", authSlice);
