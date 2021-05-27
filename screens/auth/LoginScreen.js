@@ -13,12 +13,16 @@ import {
     Dimensions,
 } from "react-native";
 
+import { useDispatch } from "react-redux";
+import { authSignInUser } from "../../redux/auth/authOperations";
+
 const initialState = {
     email: "",
     password: "",
 };
 
 const LoginScreen = ({ navigation }) => {
+    const dispatch = useDispatch()
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [state, setState] = useState(initialState);
     const [dimensions, setDimensions] = useState(
@@ -38,14 +42,18 @@ const LoginScreen = ({ navigation }) => {
         };
     }, []);
 
-
-
-    const keyboardHide = () => {
+    const handleSubmit = () => {
         setIsShowKeyboard(false);
         Keyboard.dismiss();
-        console.log('state :', state);
+        dispatch(authSignInUser(state));
         setState(initialState);
     };
+
+    const keyboardHide = () => {
+        Keyboard.dismiss();
+        setIsShowKeyboard(false);
+    };
+
     return (
         <TouchableWithoutFeedback onPress={keyboardHide} >
 
@@ -75,13 +83,10 @@ const LoginScreen = ({ navigation }) => {
                                     style={styles.input}
                                     textAlign={"center"}
                                     onFocus={() => setIsShowKeyboard(true)}
-                                    value={state.email}
-                                    onChangeText={(value) =>
-                                        setState((prevState) => ({
-                                            ...prevState,
-                                            email: value,
-                                        }))
-                                    }
+                                    value={state.email.toLowerCase()}
+                                    onChangeText={(value) => setState((prevState) => ({
+                                        ...prevState, email: value,
+                                    }))}
                                 />
                             </View>
 
@@ -93,22 +98,16 @@ const LoginScreen = ({ navigation }) => {
                                     secureTextEntry={true}
                                     onFocus={() => setIsShowKeyboard(true)}
                                     value={state.password}
-                                    onChangeText={(value) =>
-                                        setState((prevState) => ({
-                                            ...prevState,
-                                            password: value,
-                                        }))
-                                    }
+                                    onChangeText={(value) => setState((prevState) => ({
+                                        ...prevState, password: value,
+                                    }))}
                                 />
                             </View>
 
-                            {/* отличаеться на адроид */}
-                            {/* <Button title="SIGN IN" /> */}
                             <TouchableOpacity
                                 activeOpacity={0.8}
                                 style={styles.btn}
-                                onPress={keyboardHide}
-
+                                onPress={handleSubmit}
                             >
                                 <Text style={styles.btnTitle}>SIGN IN</Text>
                             </TouchableOpacity>
