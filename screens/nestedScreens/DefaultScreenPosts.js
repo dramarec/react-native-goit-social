@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, FlatList, Image, Button } from "react-native";
+import { View, StyleSheet, FlatList, Image, Button, Text } from "react-native";
+import db from "../../firebase/config";
 
-const DefaultScreenPosts = ({ route, navigation }) => {
-    // console.log("route.params===>", route.params);
+const DefaultScreenPosts = ({ navigation }) => {
 
     const [posts, setPosts] = useState([]);
 
-    useEffect(() => {
-        if (route.params) {
-            setPosts((prevState) => [...prevState, route.params]);
-        }
-    }, [route.params]);
+    const getAllPost = async () => {
+        await db
+            .firestore()
+            .collection("posts")
+            .onSnapshot((data) =>
+                setPosts(data.docs.map((doc) =>
+                    ({ ...doc.data(), id: doc.id })))
+            );
+    };
 
-    // console.log("posts===>", posts);
+    useEffect(() => {
+        getAllPost();
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -27,12 +33,29 @@ const DefaultScreenPosts = ({ route, navigation }) => {
                             alignItems: "center",
                         }}
                     >
-                        <Image style={{ width: 350, height: 200 }} source={{ uri: item.photo }} />
+                        <Image style={{ width: 350, height: 200 }}
+                            source={{ uri: item.photo }}
+                        />
+
+                        <View>
+                            <Text>{item.comment}</Text>
+                        </View>
+
+                        <View>
+                            <Button title="go to map"
+                                onPress={() => navigation
+                                    .navigate("Map", { location: item.location })}
+                            />
+
+                            <Button title="go to Comments"
+                                onPress={() => navigation
+                                    .navigate("Comments", { postId: item.id })}
+                            />
+                        </View>
                     </View>
                 )}
             />
-            <Button title="go to map" onPress={() => navigation.navigate("Map")} />
-            <Button title="go to Comments" onPress={() => navigation.navigate("Comments")} />
+
         </View>
     );
 };
