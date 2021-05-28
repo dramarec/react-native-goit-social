@@ -49,7 +49,7 @@ const DefaultScreenPosts = ({ navigation }) => {
 
                             <Button title="go to Comments"
                                 onPress={() => navigation
-                                    .navigate("Comments")}
+                                    .navigate("Comments", { postId: item.id })}
                             />
                         </View>
                     </View>
