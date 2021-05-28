@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TextInput } from "react-native";
 import { Camera } from "expo-camera";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as Location from "expo-location";
@@ -10,11 +10,29 @@ import db from "../../firebase/config";
 const CreateScreen = ({ navigation }) => {
     const [camera, setCamera] = useState(null);
     const [photo, setPhoto] = useState(null);
+    const [comment, setComment] = useState("");
+    const [location, setLocation] = useState(null);
+
+
+    useEffect(() => {
+        (async () => {
+            Camera.requestPermissionsAsync();
+
+            let { status } = await Location.requestForegroundPermissionsAsync();
+
+            if (status !== "granted") {
+                console.log("Permission to access location was denied");
+                return;
+            }
+
+            let location = await Location.getCurrentPositionAsync({});
+            setLocation(location);
+        })();
+    }, []);
 
     const takePhoto = async () => {
         const photo = await camera.takePictureAsync();
-        const location = await Location.getCurrentPositionAsync({});
-
+        // await Location.getCurrentPositionAsync({});
         setPhoto(photo.uri);
     };
 
@@ -28,8 +46,19 @@ const CreateScreen = ({ navigation }) => {
         const file = await response.blob();
         const uniId = shortid.generate();
 
-        const dataPhoto = await db.storage().ref(`postImage/${uniId}`).put(file);
-        console.log("{*} ===> uploadPhotoToServer ===> dataPhoto", dataPhoto);
+        await db
+            .storage()
+            .ref(`postImage/${uniId}`)
+            .put(file);
+
+
+        const processedPhoto = await db
+            .storage()
+            .ref('postImage')
+            .child(uniId)
+            .getDownloadURL()
+
+        console.log("{*} ===> processedPhoto", processedPhoto);
     };
 
     return (
@@ -44,11 +73,17 @@ const CreateScreen = ({ navigation }) => {
                     <Text style={styles.snap}>SNAP</Text>
                 </TouchableOpacity>
             </Camera>
+
             <View>
+                <View style={styles.inputContainer}>
+                    <TextInput style={styles.input} onChangeText={setComment} />
+                </View>
+
                 <TouchableOpacity style={styles.sendBtn} onPress={sendPhoto} >
                     <Text style={styles.sendLabel}>SEND</Text>
                 </TouchableOpacity>
             </View>
+
         </View>
     );
 };
@@ -104,6 +139,15 @@ const styles = StyleSheet.create({
     sendLabel: {
         color: "#20b2aa",
         fontSize: 20,
+    },
+    inputContainer: {
+        marginHorizontal: 10,
+    },
+    input: {
+        height: 50,
+        borderWidth: 1,
+        borderColor: "#fff",
+        borderBottomColor: "#20b2aa",
     },
 });
 
