@@ -32,7 +32,7 @@ const LoginScreen = ({ navigation }) => {
     useEffect(() => {
         const onChange = () => {
             const width = Dimensions.get("window").width - 20 * 2;
-            console.log("{*} ===> onChange ===> width", width);
+            // console.log("{*} ===> onChange ===> width", width);
 
             setDimensions(width);
         };

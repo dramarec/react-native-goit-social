@@ -9,10 +9,9 @@ import { store } from "./redux/store";
 import db from "./firebase/config";
 
 export default function App() {
-    // null => auth, {} => MainTab
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(null); 
     db.auth().onAuthStateChanged((user) => setUser(user));
-    const routing = useRoute(user)
+    const routing = useRoute(user);
 
     const [loaded] = useFonts({
         "DMMono-Regular": require("./assets/fonts/DMMono-Regular.ttf"),
