@@ -8,6 +8,7 @@ export const authSignUpUser = ({ email, password, nickname }) =>
             await db
                 .auth()
                 .createUserWithEmailAndPassword(email, password);
+
             const user = await db
                 .auth().currentUser;
 
@@ -23,7 +24,7 @@ export const authSignUpUser = ({ email, password, nickname }) =>
             };
 
             dispatch(authSlice.actions
-                .updateUserProfile(userUpdateProfile))
+                .updateUserProfile(userUpdateProfile));
 
         } catch (error) {
             console.log("!*=> error =>", error);
@@ -34,10 +35,12 @@ export const authSignUpUser = ({ email, password, nickname }) =>
 export const authSignInUser = ({ email, password }) =>
     async (dispatch, getSatte) => {
         try {
+
             const user = await db
                 .auth()
                 .signInWithEmailAndPassword(email, password);
             console.log("user=>", user);
+
         } catch (error) {
             console.log("*=> error", error);
             console.log("*=> error.code", error.code);
@@ -49,7 +52,20 @@ export const authStateCahngeUser = () =>
     async (dispatch, getState) => {
         await db
             .auth()
-            .onAuthStateChanged(user => setUser(user));
+            .onAuthStateChanged(user => {
+                if (user) {
+                    const userUpdateProfile = {
+                        userId: user.uid,
+                        nickName: user.displayName,
+                    };
+
+                    dispatch(authSlice.actions
+                        .updateUserProfile(userUpdateProfile));
+
+                    dispatch(authSlice.actions
+                        .authStateChange({ stateChange: true }));
+                }
+            });
     };
 
 export const authSignOutUser = () =>
