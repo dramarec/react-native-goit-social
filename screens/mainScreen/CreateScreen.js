@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-
 import { View, Text, StyleSheet, Image, TextInput } from "react-native";
-import { Camera } from "expo-camera";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as Location from "expo-location";
+import { Camera } from "expo-camera";
 import shortid from "shortid";
+
 import db from "../../firebase/config";
 
 
@@ -35,14 +35,12 @@ const CreateScreen = ({ navigation }) => {
 
     const takePhoto = async () => {
         const photo = await camera.takePictureAsync();
-        // await Location.getCurrentPositionAsync({});
         setPhoto(photo.uri);
     };
 
     const sendPhoto = () => {
-        // uploadPhotoToServer()
         uploadPostToServer()
-        navigation.navigate("DefaultScreen", { photo });
+        navigation.navigate("DefaultScreen");
     };
 
     const uploadPostToServer = async () => {
@@ -73,7 +71,6 @@ const CreateScreen = ({ navigation }) => {
             .child(uniId)
             .getDownloadURL()
 
-        // console.log("{*} ===> processedPhoto", processedPhoto);
         return processedPhoto;
     };
 
