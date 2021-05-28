@@ -34,7 +34,7 @@ const CreateScreen = ({ navigation }) => {
     };
 
     const sendPhoto = () => {
-        console.log("navigation", navigation);
+        // console.log("navigation", navigation);
         navigation.navigate("DefaultScreen", { photo });
     };
 

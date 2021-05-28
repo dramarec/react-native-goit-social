@@ -12,6 +12,8 @@ import {
     TouchableWithoutFeedback,
     Dimensions,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { authSignUpUser } from "../../redux/auth/authOperations";
 
 const initialState = {
     email: "",
@@ -20,10 +22,11 @@ const initialState = {
 };
 
 const RegisterScreen = ({ navigation }) => {
-    console.log(Platform.OS);
+    // console.log(Platform.OS);
+    const dispatch = useDispatch()
+
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [state, setstate] = useState(initialState);
-
     const [dimensions, setdimensions] = useState(
         Dimensions.get("window").width - 20 * 2
     );
@@ -39,11 +42,16 @@ const RegisterScreen = ({ navigation }) => {
         };
     }, []);
 
-    const keyboardHide = () => {
+    const handleSubmit = () => {
         setIsShowKeyboard(false);
         Keyboard.dismiss();
-        console.log(state);
+        dispatch(authSignUpUser(state))
         setstate(initialState);
+    };
+
+    const keyboardHide = () => {
+        Keyboard.dismiss();
+        setIsShowKeyboard(false);
     };
 
     return (
@@ -75,7 +83,7 @@ const RegisterScreen = ({ navigation }) => {
                                     style={styles.input}
                                     textAlign={"center"}
                                     onFocus={() => setIsShowKeyboard(true)}
-                                    value={state.email}
+                                    value={state.nickname}
                                     onChangeText={(value) =>
                                         setstate((prevState) => ({
                                             ...prevState,
@@ -92,7 +100,7 @@ const RegisterScreen = ({ navigation }) => {
                                     style={styles.input}
                                     textAlign={"center"}
                                     onFocus={() => setIsShowKeyboard(true)}
-                                    value={state.email}
+                                    value={state.email.toLowerCase()}
                                     onChangeText={(value) =>
                                         setstate((prevState) => ({
                                             ...prevState,
@@ -120,7 +128,7 @@ const RegisterScreen = ({ navigation }) => {
                             <TouchableOpacity
                                 activeOpacity={0.8}
                                 style={styles.btn}
-                                onPress={keyboardHide}
+                                onPress={handleSubmit}
                             >
                                 <Text style={styles.btnTitle}>SIGN UP</Text>
                             </TouchableOpacity>

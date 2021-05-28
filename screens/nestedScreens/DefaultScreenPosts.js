@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, FlatList, Image, Button } from "react-native";
 
 const DefaultScreenPosts = ({ route, navigation }) => {
-    console.log("route.params===>", route.params);
+    // console.log("route.params===>", route.params);
 
     const [posts, setPosts] = useState([]);
 
@@ -12,7 +12,7 @@ const DefaultScreenPosts = ({ route, navigation }) => {
         }
     }, [route.params]);
 
-    console.log("posts===>", posts);
+    // console.log("posts===>", posts);
 
     return (
         <View style={styles.container}>

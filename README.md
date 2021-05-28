@@ -10,4 +10,6 @@
 -   expo install expo-camera
 -   expo install expo-location
 -   expo install react-native-maps
+-   yarn add @reduxjs/toolkit react-rdux
+-   expo install firebase
 ```
