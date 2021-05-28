@@ -6,6 +6,19 @@ const state = {
     stateChange: false,
 }
 
+// const actions = {
+//     updateUserProfile: (state, { payload }) => ({
+//         ...state,
+//         userId: payload.userId,
+//         nickName: payload.nickName,
+//     }),
+//     authStateChange: (state, { payload }) => ({
+//         ...state,
+//         stateChange: payload.stateChange,
+//     }),
+//     authSignOut: () => state,
+// },
+
 export const authSlice = createSlice({
     name: 'auth',
     initialState: state,
@@ -19,5 +32,6 @@ export const authSlice = createSlice({
             ...state,
             stateChange: payload.stateChange,
         }),
+        authSignOut: () => state,
     },
 });

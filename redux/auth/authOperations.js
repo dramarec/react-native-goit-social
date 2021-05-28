@@ -69,5 +69,8 @@ export const authStateCahngeUser = () =>
     };
 
 export const authSignOutUser = () =>
-    async (dispatch, getSatte) => { };
+    async (dispatch, getSatte) => {
+        await db.auth().signOut();
+        dispatch(authSlice.actions.authSignOut());
+    };
 
