@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import {
-    View,
-    Text,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    SafeAreaView,
-    FlatList,
-} from "react-native";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, SafeAreaView, FlatList } from "react-native";
 import db from "../../firebase/config";
 
 const CommentsScreen = ({ route }) => {
     const { postId } = route.params;
 
-    const [comment, setComment] = useState("");
+    const [comment, setComment] = useState('');
     const [allComments, setAllComments] = useState([]);
 
     const { nickName } = useSelector(state => state.auth);
