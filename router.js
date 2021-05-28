@@ -23,14 +23,14 @@ export const useRoute = (isAuth) => {
 
                 <AuthStack.Screen
                     options={{ headerShown: false }}
-                    name='Register'
-                    component={RegisterScreen}
+                    name='Login'
+                    component={LoginScreen}
                 />
 
                 <AuthStack.Screen
                     options={{ headerShown: false }}
-                    name='Login'
-                    component={LoginScreen}
+                    name='Register'
+                    component={RegisterScreen}
                 />
 
             </AuthStack.Navigator>

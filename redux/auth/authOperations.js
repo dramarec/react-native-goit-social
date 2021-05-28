@@ -4,23 +4,27 @@ import { authSlice } from './authReducer'
 export const authSignUpUser = ({ email, password, nickname }) =>
     async (dispatch, getSatte) => {
         try {
-            // const { user } = await db
-            //     .auth()
-            //     .createUserWithEmailAndPassword(email, password);
-            // console.log("{*} ===> user =>", user);
-            await db.auth().createUserWithEmailAndPassword(email, password);
-            const user = await db.auth().currentUser;
 
-            await user.updateProfile({ displayName: nickname });
+            await db
+                .auth()
+                .createUserWithEmailAndPassword(email, password);
 
-            const { uid, displayName } = await db.auth().currentUser;
+            const user = await db
+                .auth().currentUser;
+
+            await user
+                .updateProfile({ displayName: nickname });
+
+            const { uid, displayName } = await db
+                .auth().currentUser;
 
             const userUpdateProfile = {
                 userId: uid,
                 nickName: displayName,
             };
 
-            dispatch(authSlice.actions.updateUserProfile(userUpdateProfile))
+            dispatch(authSlice.actions
+                .updateUserProfile(userUpdateProfile));
 
         } catch (error) {
             console.log("!*=> error =>", error);
@@ -31,10 +35,12 @@ export const authSignUpUser = ({ email, password, nickname }) =>
 export const authSignInUser = ({ email, password }) =>
     async (dispatch, getSatte) => {
         try {
+
             const user = await db
                 .auth()
                 .signInWithEmailAndPassword(email, password);
             console.log("user=>", user);
+
         } catch (error) {
             console.log("*=> error", error);
             console.log("*=> error.code", error.code);
@@ -42,4 +48,29 @@ export const authSignInUser = ({ email, password }) =>
         }
     };
 
-export const authSignOutUser = () => async (dispatch, getSatte) => { };
+export const authStateCahngeUser = () =>
+    async (dispatch, getState) => {
+        await db
+            .auth()
+            .onAuthStateChanged(user => {
+                if (user) {
+                    const userUpdateProfile = {
+                        userId: user.uid,
+                        nickName: user.displayName,
+                    };
+
+                    dispatch(authSlice.actions
+                        .updateUserProfile(userUpdateProfile));
+
+                    dispatch(authSlice.actions
+                        .authStateChange({ stateChange: true }));
+                }
+            });
+    };
+
+export const authSignOutUser = () =>
+    async (dispatch, getSatte) => {
+        await db.auth().signOut();
+        dispatch(authSlice.actions.authSignOut());
+    };
+
