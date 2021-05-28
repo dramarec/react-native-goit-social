@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, FlatList, Image, Button } from "react-native";
+import { View, StyleSheet, FlatList, Image, Button, Text } from "react-native";
 import db from "../../firebase/config";
 
-const DefaultScreenPosts = ({ route, navigation }) => {
+const DefaultScreenPosts = ({ navigation }) => {
 
     const [posts, setPosts] = useState([]);
 
@@ -19,13 +19,6 @@ const DefaultScreenPosts = ({ route, navigation }) => {
     useEffect(() => {
         getAllPost();
     }, []);
-    
-    // useEffect(() => {
-    //     if (route.params) {
-    //         setPosts((prevState) => [...prevState, route.params]);
-    //     }
-    // }, [route.params]);
-
 
     return (
         <View style={styles.container}>
@@ -40,12 +33,29 @@ const DefaultScreenPosts = ({ route, navigation }) => {
                             alignItems: "center",
                         }}
                     >
-                        <Image style={{ width: 350, height: 200 }} source={{ uri: item.photo }} />
+                        <Image style={{ width: 350, height: 200 }}
+                            source={{ uri: item.photo }}
+                        />
+
+                        <View>
+                            <Text>{item.comment}</Text>
+                        </View>
+
+                        <View>
+                            <Button title="go to map"
+                                onPress={() => navigation
+                                    .navigate("Map", { location: item.location })}
+                            />
+
+                            <Button title="go to Comments"
+                                onPress={() => navigation
+                                    .navigate("Comments")}
+                            />
+                        </View>
                     </View>
                 )}
             />
-            <Button title="go to map" onPress={() => navigation.navigate("Map")} />
-            <Button title="go to Comments" onPress={() => navigation.navigate("Comments")} />
+
         </View>
     );
 };
