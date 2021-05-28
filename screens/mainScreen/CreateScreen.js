@@ -3,39 +3,33 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import { Camera } from "expo-camera";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as Location from "expo-location";
+import shortid from "shortid";
+import db from "../../firebase/config";
+
 
 const CreateScreen = ({ navigation }) => {
     const [camera, setCamera] = useState(null);
     const [photo, setPhoto] = useState(null);
 
-    // useEffect(() => {
-    //     (async () => {
-    //         let { status } = await Location.requestForegroundPermissionsAsync();
-    //         if (status !== 'granted') {
-    //             setErrorMsg('Permission to access location was denied');
-    //             return;
-    //         }
-
-    //         let location = await Location.getCurrentPositionAsync({});
-    //         setLocation(location);
-    //     })();
-    // }, []);
-
     const takePhoto = async () => {
-        // console.log("{*} ===> CreateScreen ===> camera", camera.takePictureAsync());
         const photo = await camera.takePictureAsync();
-        setPhoto(photo.uri);
-
         const location = await Location.getCurrentPositionAsync({});
-        console.log("latitude", location.coords.latitude);
-        console.log("longitude", location.coords.longitude);
-        // console.log("{*} ===> takePhoto ===> location", location);
-        // console.log("photo", photo);
+
+        setPhoto(photo.uri);
     };
 
     const sendPhoto = () => {
-        // console.log("navigation", navigation);
+        uploadPhotoToServer()
         navigation.navigate("DefaultScreen", { photo });
+    };
+
+    const uploadPhotoToServer = async () => {
+        const response = await fetch(photo);
+        const file = await response.blob();
+        const uniId = shortid.generate();
+
+        const dataPhoto = await db.storage().ref(`postImage/${uniId}`).put(file);
+        console.log("{*} ===> uploadPhotoToServer ===> dataPhoto", dataPhoto);
     };
 
     return (
@@ -114,3 +108,16 @@ const styles = StyleSheet.create({
 });
 
 export default CreateScreen;
+
+    // useEffect(() => {
+    //     (async () => {
+    //         let { status } = await Location.requestForegroundPermissionsAsync();
+    //         if (status !== 'granted') {
+    //             setErrorMsg('Permission to access location was denied');
+    //             return;
+    //         }
+
+    //         let location = await Location.getCurrentPositionAsync({});
+    //         setLocation(location);
+    //     })();
+    // }, []);
