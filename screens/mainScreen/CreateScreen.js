@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+
 import { View, Text, StyleSheet, Image, TextInput } from "react-native";
 import { Camera } from "expo-camera";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -13,6 +15,7 @@ const CreateScreen = ({ navigation }) => {
     const [comment, setComment] = useState("");
     const [location, setLocation] = useState(null);
 
+    const { userId, nickName } = useSelector(state => state.auth);
 
     useEffect(() => {
         (async () => {
@@ -37,8 +40,20 @@ const CreateScreen = ({ navigation }) => {
     };
 
     const sendPhoto = () => {
-        uploadPhotoToServer()
+        // uploadPhotoToServer()
+        uploadPostToServer()
         navigation.navigate("DefaultScreen", { photo });
+    };
+
+    const uploadPostToServer = async () => {
+        const photo = await uploadPhotoToServer();
+        const createPost = await db
+            .firestore()
+            .collection("posts")
+            .add({
+                photo, comment, location: location.coords, userId, nickName
+            });
+        console.log("{*} ===> uploadPostToServer ===> createPost", createPost);
     };
 
     const uploadPhotoToServer = async () => {
@@ -58,7 +73,8 @@ const CreateScreen = ({ navigation }) => {
             .child(uniId)
             .getDownloadURL()
 
-        console.log("{*} ===> processedPhoto", processedPhoto);
+        // console.log("{*} ===> processedPhoto", processedPhoto);
+        return processedPhoto;
     };
 
     return (
